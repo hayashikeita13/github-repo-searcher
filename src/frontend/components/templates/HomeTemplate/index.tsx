@@ -1,9 +1,10 @@
-import styles from './HomeTemplate.module.scss';
+import SearchForm from '@/frontend/components/molecules/SearchForm';
+import styles from './index.module.scss';
 
 export default function HomeTemplate() {
   return (
     <div className={styles.root}>
-      <p>home template</p>
+      <SearchForm />
     </div>
   );
 }
