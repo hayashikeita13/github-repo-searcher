@@ -3,8 +3,13 @@ import { describe, expect, it } from 'vitest';
 import HomeTemplate from './index';
 
 describe('HomeTemplate', () => {
-  it('「home template」がホーム画面に表示される', () => {
+  it('検索窓が表示される', () => {
     render(<HomeTemplate />);
-    expect(screen.getByText('home template')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('リポジトリを検索')).toBeInTheDocument();
+  });
+
+  it('検索ボタンが表示される', () => {
+    render(<HomeTemplate />);
+    expect(screen.getByRole('button', { name: '検索' })).toBeInTheDocument();
   });
 });

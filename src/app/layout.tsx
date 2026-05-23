@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Header from '@/frontend/components/organisms/Header';
 
 const geistSans = Geist({
@@ -25,8 +26,10 @@ export default function RootLayout({
   return (
     <html lang='js' className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body>
-        <Header />
-        {children}
+        <AntdRegistry>
+          <Header />
+          {children}
+        </AntdRegistry>
       </body>
     </html>
   );
