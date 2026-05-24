@@ -1,19 +1,26 @@
+@use '../../base.module.scss' as base;
+
 .root {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: #fff;
-  min-width: 8rem;
+  border: 1px solid base.$color-border;
+  border-radius: base.$radius-card;
+  background-color: base.$color-bg;
+  min-width: 6.5rem;
+
+  @include base.tablet {
+    min-width: 8rem;
+  }
 }
 
 .label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #6b7280;
+  color: base.$color-text-muted;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -21,6 +28,6 @@
 .value {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111827;
+  color: base.$color-text;
   margin: 0;
 }

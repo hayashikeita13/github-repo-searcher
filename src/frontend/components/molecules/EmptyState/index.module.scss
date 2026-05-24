@@ -1,9 +1,11 @@
+@use '../../base.module.scss' as base;
+
 .root {
   padding: 2rem 1rem;
   text-align: center;
-  color: #6b7280;
+  color: base.$color-text-muted;
 }
 
 .error {
-  color: #b91c1c;
+  color: base.$color-text-error;
 }
