@@ -1,6 +1,8 @@
+import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
-import { defineConfig, globalIgnores } from 'eslint/config';
+import importPlugin from 'eslint-plugin-import';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const eslintConfig = defineConfig([
@@ -10,6 +12,9 @@ const eslintConfig = defineConfig([
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
   {
     rules: {
+      ...jsxA11y.flatConfigs.recommended.rules,
+      ...importPlugin.flatConfigs.recommended.rules,
+      ...importPlugin.flatConfigs.typescript.rules,
       'prettier/prettier': [
         'error',
         {
@@ -20,6 +25,16 @@ const eslintConfig = defineConfig([
           printWidth: 120,
         },
       ],
+      'import/order': [
+        'warn',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+        },
+      ],
+      'import/no-duplicates': 'error',
+      'import/no-cycle': 'error',
     },
   },
 ]);

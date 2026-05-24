@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Spin } from 'antd';
-import { useRepositories } from '@/frontend/contexts/RepositoriesContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 import RepositoryDetail from '@/frontend/components/organisms/RepositoryDetail';
+import { useRepositories } from '@/frontend/contexts/RepositoriesContext';
+
 import styles from './index.module.scss';
 
 type Props = { owner: string; name: string };

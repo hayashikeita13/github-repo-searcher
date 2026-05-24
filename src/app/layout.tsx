@@ -1,6 +1,7 @@
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
+
 import Header from '@/frontend/components/organisms/Header';
 import { RepositoriesProvider } from '@/frontend/contexts/RepositoriesContext';
 import './globals.scss';

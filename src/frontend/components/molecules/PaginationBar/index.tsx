@@ -1,6 +1,7 @@
 'use client';
 
 import { Pagination } from 'antd';
+
 import styles from './index.module.scss';
 
 const GITHUB_SEARCH_RESULT_LIMIT = 1000;

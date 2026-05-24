@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+
 import type { GithubRepository } from '@/frontend/api/github/types';
+
 import styles from './index.module.scss';
 
 type Props = { repository: GithubRepository };

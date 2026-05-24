@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import RepositoryList from './index';
+
 import type { GithubRepository } from '@/frontend/api/github/types';
+
+import RepositoryList from './index';
 
 const makeRepo = (id: number, login: string, name: string): GithubRepository => ({
   id,

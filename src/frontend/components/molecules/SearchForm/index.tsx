@@ -2,6 +2,7 @@
 
 import { Button, Input } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
+
 import styles from './index.module.scss';
 
 export default function SearchForm() {

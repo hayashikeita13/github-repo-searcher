@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { searchRepositories } from './searchRepositories';
 import { GithubApiError } from './types';
 
