@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { GithubRepository } from '@/frontend/api/github/types';
 import { GithubApiError } from '@/frontend/api/github/types';
+import { RepositoriesProvider, useRepositories } from '@/frontend/contexts/RepositoriesContext';
 import SearchResults from './index';
 
 const pushMock = vi.fn();
@@ -40,8 +42,12 @@ function setHook(next: Partial<typeof hookReturn>) {
   Object.assign(hookReturn, next);
 }
 
+function Wrapper({ children }: { children: ReactNode }) {
+  return <RepositoriesProvider>{children}</RepositoriesProvider>;
+}
+
 function renderWithProvider() {
-  return render(<SearchResults />);
+  return render(<SearchResults />, { wrapper: Wrapper });
 }
 
 describe('SearchResults', () => {
@@ -92,6 +98,30 @@ describe('SearchResults', () => {
     });
     renderWithProvider();
     expect(screen.getByRole('alert')).toHaveTextContent(/レート制限/);
+  });
+
+  it('success のとき items が Context に保存される', () => {
+    searchParamsValue = new URLSearchParams('q=react&page=1');
+    setHook({
+      status: 'success',
+      data: { total_count: 1, incomplete_results: false, items: [repo] },
+      error: null,
+    });
+
+    function CapturedRepo() {
+      const { getRepository } = useRepositories();
+      const found = getRepository('vercel', 'next.js');
+      return <span data-testid='captured'>{found?.full_name ?? ''}</span>;
+    }
+
+    render(
+      <Wrapper>
+        <SearchResults />
+        <CapturedRepo />
+      </Wrapper>
+    );
+
+    expect(screen.getByTestId('captured')).toHaveTextContent('vercel/next.js');
   });
 
   it('Pagination のページ変更で router.push が新しい URL を呼ぶ', () => {
