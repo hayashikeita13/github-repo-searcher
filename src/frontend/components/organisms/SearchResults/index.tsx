@@ -39,7 +39,10 @@ export default function SearchResults() {
 
   const { status, data, error } = useGithubRepositories({ q: q ?? '', page });
 
-  const { saveRepositories } = useRepositories();
+  const { saveRepositories, clearRepositories } = useRepositories();
+  useEffect(() => {
+    clearRepositories();
+  }, [q, clearRepositories]);
   useEffect(() => {
     if (status === 'success' && data) saveRepositories(data.items);
   }, [status, data, saveRepositories]);

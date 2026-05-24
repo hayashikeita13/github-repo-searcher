@@ -10,6 +10,7 @@ const makeKey = (owner: string, name: string): Key => `${owner}/${name}`;
 type ContextValue = {
   saveRepositories: (items: GithubRepository[]) => void;
   getRepository: (owner: string, name: string) => GithubRepository | undefined;
+  clearRepositories: () => void;
 };
 
 const RepositoriesContext = createContext<ContextValue | null>(null);
@@ -29,7 +30,14 @@ export function RepositoriesProvider({ children }: { children: ReactNode }) {
 
   const getRepository = useCallback((owner: string, name: string) => map.get(makeKey(owner, name)), [map]);
 
-  const value = useMemo<ContextValue>(() => ({ saveRepositories, getRepository }), [saveRepositories, getRepository]);
+  const clearRepositories = useCallback(() => {
+    setMap((prev) => (prev.size === 0 ? prev : new Map()));
+  }, []);
+
+  const value = useMemo<ContextValue>(
+    () => ({ saveRepositories, getRepository, clearRepositories }),
+    [saveRepositories, getRepository, clearRepositories]
+  );
 
   return <RepositoriesContext.Provider value={value}>{children}</RepositoriesContext.Provider>;
 }

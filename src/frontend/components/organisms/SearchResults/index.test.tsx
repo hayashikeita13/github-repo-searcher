@@ -124,6 +124,52 @@ describe('SearchResults', () => {
     expect(screen.getByTestId('captured')).toHaveTextContent('vercel/next.js');
   });
 
+  it('q が変わると過去の Context 内 repo はクリアされる', () => {
+    const otherRepo: GithubRepository = {
+      ...repo,
+      id: 99,
+      name: 'old',
+      full_name: 'old-owner/old',
+      owner: { login: 'old-owner', avatar_url: 'https://avatars.githubusercontent.com/u/0?v=4' },
+    };
+
+    function CapturedRepo() {
+      const { getRepository } = useRepositories();
+      const found = getRepository('old-owner', 'old');
+      return <span data-testid='captured'>{found ? 'found' : 'cleared'}</span>;
+    }
+
+    // 1回目: q=old で old-owner/old を保存
+    searchParamsValue = new URLSearchParams('q=old&page=1');
+    setHook({
+      status: 'success',
+      data: { total_count: 1, incomplete_results: false, items: [otherRepo] },
+      error: null,
+    });
+    const { rerender } = render(
+      <Wrapper>
+        <SearchResults />
+        <CapturedRepo />
+      </Wrapper>
+    );
+    expect(screen.getByTestId('captured')).toHaveTextContent('found');
+
+    // 2回目: q=react に変わると old-owner/old は消えている
+    searchParamsValue = new URLSearchParams('q=react&page=1');
+    setHook({
+      status: 'success',
+      data: { total_count: 1, incomplete_results: false, items: [repo] },
+      error: null,
+    });
+    rerender(
+      <Wrapper>
+        <SearchResults />
+        <CapturedRepo />
+      </Wrapper>
+    );
+    expect(screen.getByTestId('captured')).toHaveTextContent('cleared');
+  });
+
   it('Pagination のページ変更で router.push が新しい URL を呼ぶ', () => {
     searchParamsValue = new URLSearchParams('q=react&page=1');
     setHook({

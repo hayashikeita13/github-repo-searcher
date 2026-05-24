@@ -70,6 +70,20 @@ describe('RepositoriesContext', () => {
     expect(result.current.getRepository('facebook', 'react')).toBeDefined();
   });
 
+  it('clearRepositories で全件削除される', () => {
+    const { result } = renderHook(() => useRepositories(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.saveRepositories([baseRepo]);
+    });
+    expect(result.current.getRepository('vercel', 'next.js')).toBeDefined();
+
+    act(() => {
+      result.current.clearRepositories();
+    });
+    expect(result.current.getRepository('vercel', 'next.js')).toBeUndefined();
+  });
+
   it('Provider の外で使うと throw する', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => renderHook(() => useRepositories())).toThrowError(
