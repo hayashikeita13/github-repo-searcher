@@ -79,4 +79,14 @@ describe('RepositoryDetailTemplate', () => {
     expect(replaceMock).toHaveBeenCalledWith('/');
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
   });
+
+  it('repo が無い間はリダイレクト待ちのスピナーを表示する', () => {
+    render(
+      <Wrapper>
+        <RepositoryDetailTemplate owner='vercel' name='unknown' />
+      </Wrapper>
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('読み込み中…');
+  });
 });
