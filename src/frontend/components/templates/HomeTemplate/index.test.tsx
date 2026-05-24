@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { RepositoriesProvider } from '@/frontend/contexts/RepositoriesContext';
 import HomeTemplate from './index';
 
 vi.mock('next/navigation', () => ({
@@ -12,8 +14,12 @@ vi.mock('@/frontend/hooks/useGithubRepositories', () => ({
   useGithubRepositories: () => ({ status: 'idle', data: null, error: null }),
 }));
 
+function Wrapper({ children }: { children: ReactNode }) {
+  return <RepositoriesProvider>{children}</RepositoriesProvider>;
+}
+
 function renderHome() {
-  return render(<HomeTemplate />);
+  return render(<HomeTemplate />, { wrapper: Wrapper });
 }
 
 describe('HomeTemplate', () => {
