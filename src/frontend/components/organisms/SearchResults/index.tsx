@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
+
 import { SearchUrlQuerySchema } from '@/frontend/api/github/schemas';
 import type { GithubErrorKind } from '@/frontend/api/github/types';
 import EmptyState from '@/frontend/components/molecules/EmptyState';
@@ -9,6 +10,7 @@ import PaginationBar from '@/frontend/components/molecules/PaginationBar';
 import RepositoryList from '@/frontend/components/organisms/RepositoryList';
 import { useRepositories } from '@/frontend/contexts/RepositoriesContext';
 import { useGithubRepositories } from '@/frontend/hooks/useGithubRepositories';
+
 import styles from './index.module.scss';
 
 const PER_PAGE = 50;

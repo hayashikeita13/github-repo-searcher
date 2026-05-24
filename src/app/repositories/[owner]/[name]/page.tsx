@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
+
 import RepositoryDetailTemplate from '@/frontend/components/templates/RepositoryDetailTemplate';
 
 const ParamsSchema = z.object({

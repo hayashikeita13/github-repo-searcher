@@ -1,7 +1,9 @@
-import type { ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+
 import { RepositoriesProvider } from '@/frontend/contexts/RepositoriesContext';
+
 import HomeTemplate from './index';
 
 vi.mock('next/navigation', () => ({

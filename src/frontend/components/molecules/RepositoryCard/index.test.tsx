@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import RepositoryCard from './index';
+
 import type { GithubRepository } from '@/frontend/api/github/types';
+
+import RepositoryCard from './index';
 
 const repo: GithubRepository = {
   id: 1,

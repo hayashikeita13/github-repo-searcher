@@ -1,6 +1,7 @@
 'use client';
 
 import useSWR from 'swr';
+
 import { searchRepositories } from '@/frontend/api/github/searchRepositories';
 import { GithubApiError, type SearchRepositoriesResponse } from '@/frontend/api/github/types';
 

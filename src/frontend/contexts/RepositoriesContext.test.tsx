@@ -1,7 +1,9 @@
-import type { ReactNode } from 'react';
 import { act, renderHook } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+
 import type { GithubRepository } from '@/frontend/api/github/types';
+
 import { RepositoriesProvider, useRepositories } from './RepositoriesContext';
 
 const baseRepo: GithubRepository = {

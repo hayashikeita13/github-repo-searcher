@@ -1,9 +1,11 @@
-import type { ReactNode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import type { GithubRepository } from '@/frontend/api/github/types';
 import { GithubApiError } from '@/frontend/api/github/types';
 import { RepositoriesProvider, useRepositories } from '@/frontend/contexts/RepositoriesContext';
+
 import SearchResults from './index';
 
 const pushMock = vi.fn();
