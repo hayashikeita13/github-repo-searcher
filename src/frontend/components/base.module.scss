@@ -1,0 +1,28 @@
+// Breakpoints
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+
+@mixin tablet {
+  @media (min-width: $bp-tablet) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $bp-desktop) {
+    @content;
+  }
+}
+
+// Colors
+$color-text: #111827;
+$color-text-muted: #6b7280;
+$color-text-error: #b91c1c;
+$color-border: #e5e7eb;
+$color-bg: #fff;
+$color-bg-hover: #f9fafb;
+$color-bg-skeleton: #f3f4f6;
+$color-bg-skeleton-shimmer: #e5e7eb;
+
+// Radii
+$radius-card: 8px;

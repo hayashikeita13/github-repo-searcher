@@ -1,10 +1,16 @@
+@use '../../base.module.scss' as base;
+
 .root {
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: 100%;
-  padding-top: 2rem;
+  padding-top: 1rem;
   align-items: center;
+
+  @include base.tablet {
+    padding-top: 2rem;
+  }
 }
 
 .loading {
@@ -13,7 +19,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 3rem 1rem;
-  color: #6b7280;
+  color: base.$color-text-muted;
 }
 
 .loadingText {

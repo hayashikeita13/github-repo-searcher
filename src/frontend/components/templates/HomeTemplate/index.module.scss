@@ -1,8 +1,14 @@
+@use '../../base.module.scss' as base;
+
 .root {
   display: flex;
   flex: 1;
   flex-direction: column;
   min-height: 100%;
-  padding-top: 2rem;
+  padding: 1rem;
   align-items: center;
+
+  @include base.tablet {
+    padding-top: 2rem;
+  }
 }

@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import Header from '@/frontend/components/organisms/Header';
 import { RepositoriesProvider } from '@/frontend/contexts/RepositoriesContext';
+import './globals.scss';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,6 +18,11 @@ const geistMono = Geist_Mono({
 const SITE_NAME = 'GitHub Repository Searcher';
 const SITE_DESCRIPTION =
   'GitHub 上のリポジトリをキーワードから検索し、スター数や言語などの詳細情報を素早く確認できる Web アプリです。';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {
@@ -45,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='js' className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang='ja' className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <AntdRegistry>
           <Header />
