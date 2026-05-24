@@ -13,7 +13,8 @@ GitHub Repositories の検索 App。トップでキーワード検索 → 結果
 - `npm start` — 本番ビルドの起動
 - `npm run check-types` — `tsc --noEmit` で型チェック
 - `npm run lint` / `npm run lint-fix` — ESLint（`eslint` / `eslint --fix`）
-- `npm test` — Vitest を1回実行（`vitest run`）。ファイル単体は `npx vitest run path/to/file.test.ts`、ウォッチは `npx vitest`
+- `npm run test` — Vitest を1回実行（`vitest run`）。ファイル単体は `npm run test path/to/file.test.ts`、ウォッチは `npm run test-watch`
+- `npm run test-coverage` - Vitestでテストカバレッジを測定
 - `npm run prepare` — Husky の初期化（`npm install` 時に自動実行）
 
 ## 主要依存
