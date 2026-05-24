@@ -49,7 +49,9 @@ npm run dev
 | `npm run check-types` | TypeScript の型チェック (`tsc --noEmit`) |
 | `npm run lint` | ESLint を実行 |
 | `npm run lint-fix` | ESLint を自動修正付きで実行 |
-| `npm test` | Vitest を 1 回実行 |
+| `npm run test` | Vitest を 1 回実行 |
+| `npm run test-watch` | Vitestをwatchモードで実行 |
+| `npm run test-coverage` | test coverageを測定 |
 
 特定ファイルのみテストする場合は次のように実行します。
 
