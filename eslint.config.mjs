@@ -9,7 +9,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   eslintPluginPrettierRecommended,
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'dist/**', '.agents/**']),
   {
     rules: {
       ...jsxA11y.flatConfigs.recommended.rules,
