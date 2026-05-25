@@ -44,7 +44,7 @@ describe('SearchForm', () => {
     const input = screen.getByRole('searchbox');
     fireEvent.change(input, { target: { value: 'react hooks' } });
     fireEvent.click(screen.getByRole('button', { name: '検索' }));
-    expect(pushMock).toHaveBeenCalledWith('/?q=react%20hooks&page=1');
+    expect(pushMock).toHaveBeenCalledWith('/?q=react+hooks&page=1');
   });
 
   it('空白のみのとき router.push は呼ばれない', () => {
@@ -53,5 +53,15 @@ describe('SearchForm', () => {
     fireEvent.change(input, { target: { value: '   ' } });
     fireEvent.click(screen.getByRole('button', { name: '検索' }));
     expect(pushMock).not.toHaveBeenCalled();
+  });
+
+  it('URL の q が変わると input の表示値が追従する', () => {
+    searchParamsValue = new URLSearchParams('q=A');
+    const { rerender } = render(<SearchForm />);
+    expect(screen.getByRole('searchbox')).toHaveValue('A');
+
+    searchParamsValue = new URLSearchParams('q=B');
+    rerender(<SearchForm />);
+    expect(screen.getByRole('searchbox')).toHaveValue('B');
   });
 });
