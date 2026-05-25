@@ -1,0 +1,7 @@
+@use '@/frontend/components/base.module.scss' as base;
+
+.root {
+  padding: 2rem;
+  text-align: center;
+  color: base.$color-text-muted;
+}

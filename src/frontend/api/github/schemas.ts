@@ -11,11 +11,15 @@ export const GithubRepositorySchema = z.object({
   full_name: z.string(),
   owner: GithubOwnerSchema,
   html_url: z.url(),
+  description: z.string().nullable().optional(),
   language: z.string().nullable(),
   stargazers_count: z.number(),
   watchers_count: z.number(),
   forks_count: z.number(),
   open_issues_count: z.number(),
+  default_branch: z.string().optional(),
+  pushed_at: z.string().nullable().optional(),
+  updated_at: z.string().nullable().optional(),
 });
 
 export const SearchRepositoriesResponseSchema = z.object({

@@ -49,7 +49,7 @@ describe('SearchResults (Server Component)', () => {
     render(ui);
 
     expect(screen.getAllByRole('link', { name: /vercel\/next\.js/ })).toHaveLength(3);
-    expect(screen.getByRole('listitem', { name: '1' })).toBeInTheDocument();
+    expect(screen.getByLabelText('1')).toHaveAttribute('aria-current', 'page');
   });
 
   it('Pagination のリンクが URL クエリを含む', async () => {
@@ -85,11 +85,25 @@ describe('SearchResults (Server Component)', () => {
     expect(screen.getByRole('alert')).toHaveTextContent(/レート制限/);
   });
 
-  it('未知の例外でも error の EmptyState を表示', async () => {
-    mockedSearch.mockRejectedValueOnce(new Error('boom'));
+  it('server エラーは throw して error.tsx に委譲する', async () => {
+    mockedSearch.mockRejectedValueOnce(new GithubApiError('server', 'oops'));
+    await expect(SearchResults({ q: 'react', page: 1 })).rejects.toMatchObject({ kind: 'server' });
+  });
 
+  it('network エラーは throw して error.tsx に委譲する', async () => {
+    mockedSearch.mockRejectedValueOnce(new GithubApiError('network', 'down'));
+    await expect(SearchResults({ q: 'react', page: 1 })).rejects.toMatchObject({ kind: 'network' });
+  });
+
+  it('GithubApiError でない例外もそのまま throw する', async () => {
+    mockedSearch.mockRejectedValueOnce(new Error('boom'));
+    await expect(SearchResults({ q: 'react', page: 1 })).rejects.toThrow('boom');
+  });
+
+  it('validation エラーは EmptyState で吸収', async () => {
+    mockedSearch.mockRejectedValueOnce(new GithubApiError('validation', '不正'));
     const ui = await SearchResults({ q: 'react', page: 1 });
     render(ui);
-    expect(screen.getByRole('alert')).toHaveTextContent(/不明なエラー/);
+    expect(screen.getByRole('alert')).toHaveTextContent(/不正/);
   });
 });

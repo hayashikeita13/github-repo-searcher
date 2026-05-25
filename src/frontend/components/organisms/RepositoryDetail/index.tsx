@@ -19,6 +19,7 @@ export default function RepositoryDetail({ repository }: Props) {
           width={80}
           height={80}
           className={styles.avatar}
+          priority
         />
         <h1 className={styles.name}>{full_name}</h1>
       </header>

@@ -1,34 +1,18 @@
+import { PER_PAGE } from '@/frontend/api/github/constants';
 import { searchRepositories } from '@/frontend/api/github/searchRepositories';
-import { GithubApiError, type GithubErrorKind, type SearchRepositoriesResponse } from '@/frontend/api/github/types';
+import { GithubApiError, type GithubErrorKind } from '@/frontend/api/github/types';
 import EmptyState from '@/frontend/components/molecules/EmptyState';
 import PaginationBar from '@/frontend/components/molecules/PaginationBar';
 import RepositoryList from '@/frontend/components/organisms/RepositoryList';
 
 import styles from './index.module.scss';
 
-const PER_PAGE = 50;
-
-const errorKindMessages: Record<GithubErrorKind, string> = {
+const handledErrorMessages: Partial<Record<GithubErrorKind, string>> = {
   rate_limit: 'GitHub API のレート制限に達しました（未認証は 60req/h）。しばらく時間をおいて再度お試しください',
   validation: '検索キーワードが不正です',
-  forbidden: 'アクセスが拒否されました',
   not_found: 'リソースが見つかりません',
-  server: 'GitHub サーバでエラーが発生しました',
-  network: 'ネットワークエラーが発生しました',
-  unknown: '不明なエラーが発生しました',
+  forbidden: 'アクセスが拒否されました',
 };
-
-type LoadResult = { ok: true; data: SearchRepositoriesResponse } | { ok: false; kind: GithubErrorKind };
-
-async function loadResults(q: string, page: number): Promise<LoadResult> {
-  try {
-    const data = await searchRepositories({ q, page, perPage: PER_PAGE }, { next: { revalidate: 60 } });
-    return { ok: true, data };
-  } catch (err) {
-    const kind = err instanceof GithubApiError ? err.kind : 'unknown';
-    return { ok: false, kind };
-  }
-}
 
 type Props = { q?: string; page: number };
 
@@ -41,17 +25,24 @@ export default async function SearchResults({ q, page }: Props) {
     );
   }
 
-  const result = await loadResults(q, page);
-
-  if (!result.ok) {
-    return (
-      <section className={styles.root}>
-        <EmptyState variant='error' message={errorKindMessages[result.kind]} />
-      </section>
+  let data;
+  try {
+    data = await searchRepositories(
+      { q, page, perPage: PER_PAGE },
+      { next: { revalidate: 60, tags: ['github-search', `github-search:${q}`] } }
     );
+  } catch (err) {
+    if (err instanceof GithubApiError && err.kind in handledErrorMessages) {
+      return (
+        <section className={styles.root}>
+          <EmptyState variant='error' message={handledErrorMessages[err.kind]} />
+        </section>
+      );
+    }
+    throw err;
   }
 
-  if (result.data.items.length === 0) {
+  if (data.items.length === 0) {
     return (
       <section className={styles.root}>
         <EmptyState variant='no-results' />
@@ -61,8 +52,8 @@ export default async function SearchResults({ q, page }: Props) {
 
   return (
     <section className={styles.root}>
-      <RepositoryList items={result.data.items} />
-      <PaginationBar total={result.data.total_count} page={page} pageSize={PER_PAGE} q={q} />
+      <RepositoryList items={data.items} />
+      <PaginationBar total={data.total_count} page={page} pageSize={PER_PAGE} q={q} />
     </section>
   );
 }

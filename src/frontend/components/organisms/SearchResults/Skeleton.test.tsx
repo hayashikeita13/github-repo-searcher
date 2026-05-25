@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
+import { PER_PAGE } from '@/frontend/api/github/constants';
+
 import SearchResultsSkeleton from './Skeleton';
 
 describe('SearchResultsSkeleton', () => {
@@ -11,9 +13,9 @@ describe('SearchResultsSkeleton', () => {
     expect(status).toHaveAttribute('aria-busy', 'true');
   });
 
-  it('スケルトンアイテムを 5 件レンダリングする', () => {
+  it('スケルトンアイテムを PER_PAGE 件レンダリングする', () => {
     const { container } = render(<SearchResultsSkeleton />);
     const status = container.querySelector('[role="status"]');
-    expect(status?.children.length).toBe(5);
+    expect(status?.children.length).toBe(PER_PAGE);
   });
 });

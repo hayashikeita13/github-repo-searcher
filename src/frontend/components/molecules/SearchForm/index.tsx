@@ -2,6 +2,7 @@
 
 import { Button, Input } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 import styles from './index.module.scss';
 
@@ -10,8 +11,15 @@ export default function SearchForm() {
   const params = useSearchParams();
   const initialQ = params.get('q') ?? '';
 
-  const handleSearch = (value: string) => {
-    const q = value.trim();
+  const [value, setValue] = useState(initialQ);
+  const [prevInitialQ, setPrevInitialQ] = useState(initialQ);
+  if (initialQ !== prevInitialQ) {
+    setPrevInitialQ(initialQ);
+    setValue(initialQ);
+  }
+
+  const handleSearch = (next: string) => {
+    const q = next.trim();
     if (!q) return;
     const search = new URLSearchParams({ q, page: '1' }).toString();
     router.push(`/?${search}`);
@@ -20,8 +28,8 @@ export default function SearchForm() {
   return (
     <div className={styles.root}>
       <Input.Search
-        key={initialQ}
-        defaultValue={initialQ}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
         placeholder='リポジトリを検索'
         enterButton={
           <Button type='primary' autoInsertSpace={false}>

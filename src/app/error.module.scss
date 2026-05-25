@@ -1,0 +1,24 @@
+@use '@/frontend/components/base.module.scss' as base;
+
+.root {
+  padding: 2rem;
+  text-align: center;
+}
+
+.message {
+  color: base.$color-text-muted;
+}
+
+.button {
+  margin-top: 1rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid base.$color-border;
+  border-radius: base.$radius-card;
+  background: base.$color-bg;
+  color: base.$color-text;
+  cursor: pointer;
+
+  &:hover {
+    background: base.$color-bg-hover;
+  }
+}

@@ -10,7 +10,7 @@ type Props = { repository: GithubRepository };
 export default function RepositoryCard({ repository }: Props) {
   const { owner, name, full_name } = repository;
   return (
-    <Link href={`/repositories/${owner.login}/${name}`} className={styles.root}>
+    <Link href={`/repositories/${owner.login}/${name}`} className={styles.root} prefetch={false}>
       <Image
         src={owner.avatar_url}
         alt={`${owner.login} のアバター`}
