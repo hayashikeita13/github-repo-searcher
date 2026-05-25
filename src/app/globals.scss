@@ -1,3 +1,14 @@
+:root {
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-text-error: #b91c1c;
+  --color-border: #e5e7eb;
+  --color-bg: #fff;
+  --color-bg-hover: #f9fafb;
+  --color-bg-skeleton: #f3f4f6;
+  --color-bg-skeleton-shimmer: #e5e7eb;
+}
+
 *,
 *::before,
 *::after {

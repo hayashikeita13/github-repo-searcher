@@ -13,21 +13,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!parsed.success) return {};
   const { owner, name } = parsed.data;
   const fullName = `${owner}/${name}`;
-  const description = `GitHub リポジトリ ${fullName} の詳細情報（スター数・言語・説明など）を表示します。`;
-  return {
-    title: fullName,
-    description,
-    openGraph: {
-      title: fullName,
+  const fallbackDescription = `GitHub リポジトリ ${fullName} の詳細情報（スター数・言語・説明など）を表示します。`;
+
+  try {
+    const repository = await getRepository(parsed.data, { next: { revalidate: 300 } });
+    const description = repository.description ?? fallbackDescription;
+    return {
+      title: repository.full_name,
       description,
-      type: 'article',
-    },
-    twitter: {
-      card: 'summary',
+      openGraph: {
+        title: repository.full_name,
+        description,
+        type: 'article',
+        images: [{ url: repository.owner.avatar_url }],
+      },
+      twitter: {
+        card: 'summary',
+        title: repository.full_name,
+        description,
+        images: [repository.owner.avatar_url],
+      },
+    };
+  } catch {
+    return {
       title: fullName,
-      description,
-    },
-  };
+      description: fallbackDescription,
+      openGraph: { title: fullName, description: fallbackDescription, type: 'article' },
+      twitter: { card: 'summary', title: fullName, description: fallbackDescription },
+    };
+  }
 }
 
 export default async function Page({ params }: Props) {

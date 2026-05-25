@@ -43,12 +43,31 @@ describe('app/repositories/[owner]/[name]/page', () => {
   });
 
   describe('generateMetadata', () => {
-    it('正常な owner/name で title/description を返す', async () => {
+    it('正常な owner/name で repository から取得した情報を返す', async () => {
+      vi.mocked(getRepository).mockResolvedValueOnce({ ...repo, description: 'The React Framework' });
+      const meta = await generateMetadata({ params: Promise.resolve({ owner: 'vercel', name: 'next.js' }) });
+      expect(meta.title).toBe('vercel/next.js');
+      expect(meta.description).toBe('The React Framework');
+      expect(meta.openGraph?.title).toBe('vercel/next.js');
+      expect(meta.openGraph?.images).toEqual([{ url: repo.owner.avatar_url }]);
+      expect(meta.twitter).toMatchObject({
+        card: 'summary',
+        title: 'vercel/next.js',
+        description: 'The React Framework',
+      });
+    });
+
+    it('repository.description が無いときはフォールバック文言を返す', async () => {
+      vi.mocked(getRepository).mockResolvedValueOnce(repo);
+      const meta = await generateMetadata({ params: Promise.resolve({ owner: 'vercel', name: 'next.js' }) });
+      expect(meta.description).toContain('vercel/next.js');
+    });
+
+    it('getRepository が失敗してもフォールバック metadata を返す', async () => {
+      vi.mocked(getRepository).mockRejectedValueOnce(new GithubApiError('rate_limit', 'x'));
       const meta = await generateMetadata({ params: Promise.resolve({ owner: 'vercel', name: 'next.js' }) });
       expect(meta.title).toBe('vercel/next.js');
       expect(meta.description).toContain('vercel/next.js');
-      expect(meta.openGraph?.title).toBe('vercel/next.js');
-      expect(meta.twitter).toMatchObject({ card: 'summary', title: 'vercel/next.js' });
     });
 
     it('不正な params なら空 metadata を返す', async () => {
