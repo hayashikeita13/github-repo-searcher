@@ -25,7 +25,7 @@ describe('PaginationBar', () => {
   it('q に特殊文字が含まれる場合はエンコードされる', () => {
     render(<PaginationBar total={200} page={1} pageSize={50} q='hello world' />);
     const link = screen.getByRole('link', { name: '2' });
-    expect(link).toHaveAttribute('href', '/?q=hello%20world&page=2');
+    expect(link).toHaveAttribute('href', '/?q=hello+world&page=2');
   });
 
   it('total=5000 でも 1000 件にクランプされ最終ページが 20 になる', () => {
