@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import Header from '@/frontend/components/organisms/Header';
-import { RepositoriesProvider } from '@/frontend/contexts/RepositoriesContext';
 import './globals.scss';
 
 const geistSans = Geist({
@@ -56,7 +55,7 @@ export default function RootLayout({
       <body>
         <AntdRegistry>
           <Header />
-          <RepositoriesProvider>{children}</RepositoriesProvider>
+          {children}
         </AntdRegistry>
       </body>
     </html>

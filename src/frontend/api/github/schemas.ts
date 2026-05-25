@@ -30,6 +30,11 @@ export const SearchRepositoriesArgsSchema = z.object({
   perPage: z.number().int().min(1).max(100).default(50),
 });
 
+export const GetRepositoryArgsSchema = z.object({
+  owner: z.string().min(1).max(100),
+  name: z.string().min(1).max(100),
+});
+
 export const SearchUrlQuerySchema = z.object({
   q: z.string().trim().min(1).optional(),
   page: z.coerce.number().int().min(1).default(1),

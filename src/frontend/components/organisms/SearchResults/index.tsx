@@ -1,14 +1,13 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { SearchUrlQuerySchema } from '@/frontend/api/github/schemas';
 import type { GithubErrorKind } from '@/frontend/api/github/types';
 import EmptyState from '@/frontend/components/molecules/EmptyState';
 import PaginationBar from '@/frontend/components/molecules/PaginationBar';
 import RepositoryList from '@/frontend/components/organisms/RepositoryList';
-import { useRepositories } from '@/frontend/contexts/RepositoriesContext';
 import { useGithubRepositories } from '@/frontend/hooks/useGithubRepositories';
 
 import styles from './index.module.scss';
@@ -40,14 +39,6 @@ export default function SearchResults() {
   }, [params]);
 
   const { status, data, error } = useGithubRepositories({ q: q ?? '', page });
-
-  const { saveRepositories, clearRepositories } = useRepositories();
-  useEffect(() => {
-    clearRepositories();
-  }, [q, clearRepositories]);
-  useEffect(() => {
-    if (status === 'success' && data) saveRepositories(data.items);
-  }, [status, data, saveRepositories]);
 
   if (!q || status === 'idle') {
     return (
