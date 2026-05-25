@@ -118,6 +118,23 @@ describe('searchRepositories', () => {
     });
   });
 
+  it('404 で kind="not_found"', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse({ message: 'not found' }, { status: 404 }));
+
+    await expect(searchRepositories({ q: 'react', page: 1, perPage: 50 })).rejects.toMatchObject({
+      kind: 'not_found',
+    });
+  });
+
+  it('未分類のステータス（418 等）で kind="unknown"', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse({ message: 'teapot' }, { status: 418 }));
+
+    await expect(searchRepositories({ q: 'react', page: 1, perPage: 50 })).rejects.toMatchObject({
+      kind: 'unknown',
+      status: 418,
+    });
+  });
+
   it('fetch が TypeError を投げると kind="network"', async () => {
     vi.mocked(fetch).mockRejectedValueOnce(new TypeError('failed to fetch'));
 

@@ -109,6 +109,15 @@ describe('getRepository', () => {
     });
   });
 
+  it('未分類のステータス（418 等）で kind="unknown"', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse({ message: 'teapot' }, { status: 418 }));
+
+    await expect(getRepository({ owner: 'vercel', name: 'next.js' })).rejects.toMatchObject({
+      kind: 'unknown',
+      status: 418,
+    });
+  });
+
   it('fetch が TypeError を投げると kind="network"', async () => {
     vi.mocked(fetch).mockRejectedValueOnce(new TypeError('failed to fetch'));
 
