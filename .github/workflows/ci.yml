@@ -2,18 +2,6 @@ name: CI
 
 on:
   pull_request:
-    paths:
-      - 'src/**/*'
-      - 'public/**/*'
-      - '.github/workflows/ci.yml'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'tsconfig.json'
-      - 'next.config.ts'
-      - 'next-env.d.ts'
-      - 'eslint.config.mjs'
-      - 'vitest.config.ts'
-      - 'vitest.setup.ts'
 
 jobs:
   ci:

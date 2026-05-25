@@ -21,7 +21,7 @@ GitHub Repositories の検索 App。トップでキーワード検索 → 結果
 
 - **Next.js 16.2.6 + React 19.2.4** の App Router
 - **Ant Design v6**（`antd` + `@ant-design/nextjs-registry`）。`layout.tsx` で `<AntdRegistry>` でラップ済み
-- **SWR** でクライアントサイドのデータフェッチ／キャッシュ
+- データフェッチは **Server Component から `fetch` を直接呼ぶ**（クライアント用フェッチライブラリは未導入）。キャッシュは Next.js Data Cache（`next.revalidate` / `next.tags`）で制御
 - **zod** で外部入力（API 引数／レスポンス／URL パラメータ）のバリデーション
 - **Sass**（`*.module.scss`）でスタイリング
 - **Vitest + @testing-library/react** でテスト（環境は `jsdom`）
@@ -45,9 +45,7 @@ GitHub Repositories の検索 App。トップでキーワード検索 → 結果
     - templates: `HomeTemplate`, `RepositoryDetailTemplate`
     - organisms: `Header`, `SearchResults`, `RepositoryList`, `RepositoryDetail`
     - molecules: `SearchForm`, `RepositoryCard`, `RepositoryStat`, `PaginationBar`, `EmptyState`
-- `contexts/` — React Context（例: `RepositoriesContext` で検索結果のキャッシュを保持し、詳細ページで再フェッチを避ける）
-- `hooks/` — カスタムフック。**外部 API 呼び出しは原則ここで行う**（例: `useGithubRepositories` が SWR で `searchRepositories` を叩く）
-- `api/github/` — GitHub API クライアントと型／zod スキーマ（`searchRepositories.ts` / `schemas.ts` / `types.ts`）
+- `api/github/` — GitHub API クライアントと型／zod スキーマ（`searchRepositories.ts` / `getRepository.ts` / `schemas.ts` / `types.ts` / `constants.ts`）。**API 呼び出しは原則 Server Component から直接行い**、必要に応じて `next.revalidate` / `next.tags` でキャッシュを制御する
 
 ### スタイリング
 - **Sass Modules**（`*.module.scss`）が標準
@@ -72,6 +70,6 @@ GitHub Repositories の検索 App。トップでキーワード検索 → 結果
   - リンクは `next/link` の `<Link>`、画像は `next/image` の `<Image>` を常に使う（`<a>` / `<img>` 直書きは禁止。`next.config.ts` の `images.remotePatterns` に必要なホストを追加する）
   - キャッシュ制御は `fetch` のオプションで行う（用途に応じて `cache: 'no-store'` / `next: { revalidate }` を選ぶ）
   - `<head>` を直書きせず、Metadata API（`metadata` / `generateMetadata`）を使う
-- **外部 API はカスタムフック経由で fetch**（`useXxx` フック内で API クライアントを呼ぶ）
+- **データフェッチは Server Component から `fetch`**（クライアント用フェッチライブラリは追加しない）。共有可能なクエリは `next.tags` を付け、`revalidateTag` で粒度ある再検証ができるようにしておく
 - **外部入力のバリデーションは zod で**（API 引数／レスポンス／URL クエリ）
 - **TDD アプローチ**：機能追加・修正時はテストコードも合わせて実装する
