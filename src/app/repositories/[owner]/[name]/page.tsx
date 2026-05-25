@@ -36,7 +36,7 @@ export default async function Page({ params }: Props) {
 
   let repository;
   try {
-    repository = await getRepository(parsed.data);
+    repository = await getRepository(parsed.data, { next: { revalidate: 300 } });
   } catch (err) {
     if (err instanceof GithubApiError && err.kind === 'not_found') {
       notFound();

@@ -141,4 +141,26 @@ describe('getRepository', () => {
 
     await expect(promise).rejects.toMatchObject({ name: 'AbortError' });
   });
+
+  it('opts.next を渡したとき fetch に next オプションが渡り cache は付かない', async () => {
+    const fetchMock = vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(validRepository));
+
+    await getRepository({ owner: 'vercel', name: 'next.js' }, { next: { revalidate: 300, tags: ['repo'] } });
+
+    const init = fetchMock.mock.calls[0][1] as RequestInit & {
+      next?: { revalidate?: number | false; tags?: string[] };
+    };
+    expect(init.next).toEqual({ revalidate: 300, tags: ['repo'] });
+    expect(init.cache).toBeUndefined();
+  });
+
+  it('opts.next を渡さないとき cache: "no-store" が指定される', async () => {
+    const fetchMock = vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(validRepository));
+
+    await getRepository({ owner: 'vercel', name: 'next.js' });
+
+    const init = fetchMock.mock.calls[0][1] as RequestInit & { next?: unknown };
+    expect(init.cache).toBe('no-store');
+    expect(init.next).toBeUndefined();
+  });
 });
