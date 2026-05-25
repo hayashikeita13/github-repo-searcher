@@ -158,4 +158,26 @@ describe('searchRepositories', () => {
 
     await expect(promise).rejects.toMatchObject({ name: 'AbortError' });
   });
+
+  it('opts.next を渡したとき fetch に next オプションが渡り cache は付かない', async () => {
+    const fetchMock = vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(validResponse));
+
+    await searchRepositories({ q: 'react', page: 1, perPage: 50 }, { next: { revalidate: 60, tags: ['search'] } });
+
+    const init = fetchMock.mock.calls[0][1] as RequestInit & {
+      next?: { revalidate?: number | false; tags?: string[] };
+    };
+    expect(init.next).toEqual({ revalidate: 60, tags: ['search'] });
+    expect(init.cache).toBeUndefined();
+  });
+
+  it('opts.next を渡さないとき cache: "no-store" が指定される', async () => {
+    const fetchMock = vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(validResponse));
+
+    await searchRepositories({ q: 'react', page: 1, perPage: 50 });
+
+    const init = fetchMock.mock.calls[0][1] as RequestInit & { next?: unknown };
+    expect(init.cache).toBe('no-store');
+    expect(init.next).toBeUndefined();
+  });
 });

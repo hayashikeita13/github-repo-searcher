@@ -30,7 +30,10 @@ function mapHttpStatusToError(res: Response): GithubApiError {
 
 export async function searchRepositories(
   args: unknown,
-  opts: { signal?: AbortSignal } = {}
+  opts: {
+    signal?: AbortSignal;
+    next?: { revalidate?: number | false; tags?: string[] };
+  } = {}
 ): Promise<SearchRepositoriesResponse> {
   const parsed = SearchRepositoriesArgsSchema.safeParse(args);
   if (!parsed.success) {
@@ -50,7 +53,7 @@ export async function searchRepositories(
         'X-GitHub-Api-Version': '2026-03-10',
       },
       signal: opts.signal,
-      cache: 'no-store',
+      ...(opts.next ? { next: opts.next } : { cache: 'no-store' }),
     });
   } catch (err) {
     if (isAbortError(err)) throw err;

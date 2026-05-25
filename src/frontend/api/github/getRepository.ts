@@ -25,7 +25,13 @@ function mapHttpStatusToError(res: Response): GithubApiError {
   return new GithubApiError('unknown', `不明なエラー (status=${status})`, status);
 }
 
-export async function getRepository(args: unknown, opts: { signal?: AbortSignal } = {}): Promise<GithubRepository> {
+export async function getRepository(
+  args: unknown,
+  opts: {
+    signal?: AbortSignal;
+    next?: { revalidate?: number | false; tags?: string[] };
+  } = {}
+): Promise<GithubRepository> {
   const parsed = GetRepositoryArgsSchema.safeParse(args);
   if (!parsed.success) {
     const msg = parsed.error.issues[0]?.message ?? '引数が不正です';
@@ -43,7 +49,7 @@ export async function getRepository(args: unknown, opts: { signal?: AbortSignal 
         'X-GitHub-Api-Version': '2026-03-10',
       },
       signal: opts.signal,
-      cache: 'no-store',
+      ...(opts.next ? { next: opts.next } : { cache: 'no-store' }),
     });
   } catch (err) {
     if (isAbortError(err)) throw err;

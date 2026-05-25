@@ -22,7 +22,7 @@ type LoadResult = { ok: true; data: SearchRepositoriesResponse } | { ok: false; 
 
 async function loadResults(q: string, page: number): Promise<LoadResult> {
   try {
-    const data = await searchRepositories({ q, page, perPage: PER_PAGE });
+    const data = await searchRepositories({ q, page, perPage: PER_PAGE }, { next: { revalidate: 60 } });
     return { ok: true, data };
   } catch (err) {
     const kind = err instanceof GithubApiError ? err.kind : 'unknown';
