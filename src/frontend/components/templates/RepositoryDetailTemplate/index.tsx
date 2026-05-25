@@ -1,36 +1,11 @@
-'use client';
-
-import { Spin } from 'antd';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
+import type { GithubRepository } from '@/frontend/api/github/types';
 import RepositoryDetail from '@/frontend/components/organisms/RepositoryDetail';
-import { useRepositories } from '@/frontend/contexts/RepositoriesContext';
 
 import styles from './index.module.scss';
 
-type Props = { owner: string; name: string };
+type Props = { repository: GithubRepository };
 
-export default function RepositoryDetailTemplate({ owner, name }: Props) {
-  const { getRepository } = useRepositories();
-  const repository = getRepository(owner, name);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!repository) router.replace('/');
-  }, [repository, router]);
-
-  if (!repository) {
-    return (
-      <div className={styles.root}>
-        <div role='status' aria-live='polite' className={styles.loading}>
-          <Spin size='large' />
-          <span className={styles.loadingText}>読み込み中…</span>
-        </div>
-      </div>
-    );
-  }
-
+export default function RepositoryDetailTemplate({ repository }: Props) {
   return (
     <div className={styles.root}>
       <RepositoryDetail repository={repository} />

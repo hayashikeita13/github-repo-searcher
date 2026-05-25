@@ -1,10 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { GithubRepository } from '@/frontend/api/github/types';
 import { GithubApiError } from '@/frontend/api/github/types';
-import { RepositoriesProvider, useRepositories } from '@/frontend/contexts/RepositoriesContext';
 
 import SearchResults from './index';
 
@@ -44,14 +42,6 @@ function setHook(next: Partial<typeof hookReturn>) {
   Object.assign(hookReturn, next);
 }
 
-function Wrapper({ children }: { children: ReactNode }) {
-  return <RepositoriesProvider>{children}</RepositoriesProvider>;
-}
-
-function renderWithProvider() {
-  return render(<SearchResults />, { wrapper: Wrapper });
-}
-
 describe('SearchResults', () => {
   beforeEach(() => {
     pushMock.mockReset();
@@ -60,14 +50,14 @@ describe('SearchResults', () => {
   });
 
   it('q が無いとき initial の EmptyState を表示', () => {
-    renderWithProvider();
+    render(<SearchResults />);
     expect(screen.getByText('キーワードを入力して検索してください')).toBeInTheDocument();
   });
 
   it('loading のときスケルトン領域を表示', () => {
     searchParamsValue = new URLSearchParams('q=react');
     setHook({ status: 'loading', data: null, error: null });
-    renderWithProvider();
+    render(<SearchResults />);
     expect(screen.getByRole('status')).toHaveAttribute('aria-busy', 'true');
   });
 
@@ -78,16 +68,15 @@ describe('SearchResults', () => {
       data: { total_count: 200, incomplete_results: false, items: [repo, { ...repo, id: 2 }, { ...repo, id: 3 }] },
       error: null,
     });
-    renderWithProvider();
+    render(<SearchResults />);
     expect(screen.getAllByRole('link')).toHaveLength(3);
-    // Pagination: list items に「1」が存在
     expect(screen.getByRole('listitem', { name: '1' })).toBeInTheDocument();
   });
 
   it('success で items=[] のとき no-results を表示', () => {
     searchParamsValue = new URLSearchParams('q=react');
     setHook({ status: 'success', data: { total_count: 0, incomplete_results: false, items: [] }, error: null });
-    renderWithProvider();
+    render(<SearchResults />);
     expect(screen.getByText('該当するリポジトリは見つかりませんでした')).toBeInTheDocument();
   });
 
@@ -98,78 +87,8 @@ describe('SearchResults', () => {
       data: null,
       error: new GithubApiError('rate_limit', 'x'),
     });
-    renderWithProvider();
+    render(<SearchResults />);
     expect(screen.getByRole('alert')).toHaveTextContent(/レート制限/);
-  });
-
-  it('success のとき items が Context に保存される', () => {
-    searchParamsValue = new URLSearchParams('q=react&page=1');
-    setHook({
-      status: 'success',
-      data: { total_count: 1, incomplete_results: false, items: [repo] },
-      error: null,
-    });
-
-    function CapturedRepo() {
-      const { getRepository } = useRepositories();
-      const found = getRepository('vercel', 'next.js');
-      return <span data-testid='captured'>{found?.full_name ?? ''}</span>;
-    }
-
-    render(
-      <Wrapper>
-        <SearchResults />
-        <CapturedRepo />
-      </Wrapper>
-    );
-
-    expect(screen.getByTestId('captured')).toHaveTextContent('vercel/next.js');
-  });
-
-  it('q が変わると過去の Context 内 repo はクリアされる', () => {
-    const otherRepo: GithubRepository = {
-      ...repo,
-      id: 99,
-      name: 'old',
-      full_name: 'old-owner/old',
-      owner: { login: 'old-owner', avatar_url: 'https://avatars.githubusercontent.com/u/0?v=4' },
-    };
-
-    function CapturedRepo() {
-      const { getRepository } = useRepositories();
-      const found = getRepository('old-owner', 'old');
-      return <span data-testid='captured'>{found ? 'found' : 'cleared'}</span>;
-    }
-
-    // 1回目: q=old で old-owner/old を保存
-    searchParamsValue = new URLSearchParams('q=old&page=1');
-    setHook({
-      status: 'success',
-      data: { total_count: 1, incomplete_results: false, items: [otherRepo] },
-      error: null,
-    });
-    const { rerender } = render(
-      <Wrapper>
-        <SearchResults />
-        <CapturedRepo />
-      </Wrapper>
-    );
-    expect(screen.getByTestId('captured')).toHaveTextContent('found');
-
-    // 2回目: q=react に変わると old-owner/old は消えている
-    searchParamsValue = new URLSearchParams('q=react&page=1');
-    setHook({
-      status: 'success',
-      data: { total_count: 1, incomplete_results: false, items: [repo] },
-      error: null,
-    });
-    rerender(
-      <Wrapper>
-        <SearchResults />
-        <CapturedRepo />
-      </Wrapper>
-    );
-    expect(screen.getByTestId('captured')).toHaveTextContent('cleared');
   });
 
   it('Pagination のページ変更で router.push が新しい URL を呼ぶ', () => {
@@ -179,7 +98,7 @@ describe('SearchResults', () => {
       data: { total_count: 200, incomplete_results: false, items: [repo] },
       error: null,
     });
-    renderWithProvider();
+    render(<SearchResults />);
 
     fireEvent.click(screen.getByRole('listitem', { name: '3' }));
     expect(pushMock).toHaveBeenCalledWith('/?q=react&page=3');
