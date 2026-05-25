@@ -50,7 +50,6 @@ GitHub Repositories の検索 App。トップでキーワード検索 → 結果
 ### スタイリング
 - **Sass Modules**（`*.module.scss`）が標準
 - **共通定義（カラー、ブレークポイント、mixin など）は `src/frontend/components/base.module.scss` に集約**し、各モジュールから `@use` で参照する。新規 SCSS ファイルを増やす前にここに置けないか検討する
-- `@tailwindcss/postcss` が devDependencies に入っているが、PostCSS 設定とグローバル CSS が未配置で Tailwind は実質未適用。新規スタイルは Sass Modules で書く
 
 ### テスト
 - Vitest（`vitest.config.ts`）：環境は `jsdom`、`@` エイリアスを `./src` に解決、`vitest.setup.ts` で `@testing-library/jest-dom` の matcher と `matchMedia` のポリフィル、`afterEach` の `cleanup()` を設定済み

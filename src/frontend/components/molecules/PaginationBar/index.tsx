@@ -12,7 +12,8 @@ type Props = {
 };
 
 function buildHref(q: string, page: number) {
-  return `/?q=${encodeURIComponent(q)}&page=${page}`;
+  const params = new URLSearchParams({ q, page: String(page) });
+  return `/?${params.toString()}`;
 }
 
 function buildPageList(current: number, totalPages: number): (number | 'ellipsis')[] {
