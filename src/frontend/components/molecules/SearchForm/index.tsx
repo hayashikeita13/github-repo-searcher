@@ -13,12 +13,14 @@ export default function SearchForm() {
   const handleSearch = (value: string) => {
     const q = value.trim();
     if (!q) return;
-    router.push(`/?q=${encodeURIComponent(q)}&page=1`);
+    const search = new URLSearchParams({ q, page: '1' }).toString();
+    router.push(`/?${search}`);
   };
 
   return (
     <div className={styles.root}>
       <Input.Search
+        key={initialQ}
         defaultValue={initialQ}
         placeholder='リポジトリを検索'
         enterButton={
