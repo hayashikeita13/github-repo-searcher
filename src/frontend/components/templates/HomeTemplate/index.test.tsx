@@ -9,23 +9,31 @@ vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }));
 
-vi.mock('@/frontend/hooks/useGithubRepositories', () => ({
-  useGithubRepositories: () => ({ status: 'idle', data: null, error: null }),
-}));
-
 describe('HomeTemplate', () => {
   it('検索窓が表示される', () => {
-    render(<HomeTemplate />);
+    render(
+      <HomeTemplate>
+        <div />
+      </HomeTemplate>
+    );
     expect(screen.getByPlaceholderText('リポジトリを検索')).toBeInTheDocument();
   });
 
   it('検索ボタンが表示される', () => {
-    render(<HomeTemplate />);
+    render(
+      <HomeTemplate>
+        <div />
+      </HomeTemplate>
+    );
     expect(screen.getByRole('button', { name: '検索' })).toBeInTheDocument();
   });
 
-  it('初期状態では initial の EmptyState が表示される', () => {
-    render(<HomeTemplate />);
-    expect(screen.getByText('キーワードを入力して検索してください')).toBeInTheDocument();
+  it('children をそのままレンダリングする', () => {
+    render(
+      <HomeTemplate>
+        <p>本文コンテンツ</p>
+      </HomeTemplate>
+    );
+    expect(screen.getByText('本文コンテンツ')).toBeInTheDocument();
   });
 });

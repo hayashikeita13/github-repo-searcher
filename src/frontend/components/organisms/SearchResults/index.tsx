@@ -1,19 +1,12 @@
-'use client';
-
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
-
-import { SearchUrlQuerySchema } from '@/frontend/api/github/schemas';
-import type { GithubErrorKind } from '@/frontend/api/github/types';
+import { searchRepositories } from '@/frontend/api/github/searchRepositories';
+import { GithubApiError, type GithubErrorKind, type SearchRepositoriesResponse } from '@/frontend/api/github/types';
 import EmptyState from '@/frontend/components/molecules/EmptyState';
 import PaginationBar from '@/frontend/components/molecules/PaginationBar';
 import RepositoryList from '@/frontend/components/organisms/RepositoryList';
-import { useGithubRepositories } from '@/frontend/hooks/useGithubRepositories';
 
 import styles from './index.module.scss';
 
 const PER_PAGE = 50;
-const SKELETON_COUNT = 5;
 
 const errorKindMessages: Record<GithubErrorKind, string> = {
   rate_limit: 'GitHub API のレート制限に達しました（未認証は 60req/h）。しばらく時間をおいて再度お試しください',
@@ -25,22 +18,22 @@ const errorKindMessages: Record<GithubErrorKind, string> = {
   unknown: '不明なエラーが発生しました',
 };
 
-export default function SearchResults() {
-  const router = useRouter();
-  const params = useSearchParams();
+type LoadResult = { ok: true; data: SearchRepositoriesResponse } | { ok: false; kind: GithubErrorKind };
 
-  const { q, page } = useMemo(() => {
-    const parsed = SearchUrlQuerySchema.safeParse({
-      q: params.get('q') ?? undefined,
-      page: params.get('page') ?? undefined,
-    });
-    if (!parsed.success) return { q: undefined, page: 1 };
-    return parsed.data;
-  }, [params]);
+async function loadResults(q: string, page: number): Promise<LoadResult> {
+  try {
+    const data = await searchRepositories({ q, page, perPage: PER_PAGE });
+    return { ok: true, data };
+  } catch (err) {
+    const kind = err instanceof GithubApiError ? err.kind : 'unknown';
+    return { ok: false, kind };
+  }
+}
 
-  const { status, data, error } = useGithubRepositories({ q: q ?? '', page });
+type Props = { q?: string; page: number };
 
-  if (!q || status === 'idle') {
+export default async function SearchResults({ q, page }: Props) {
+  if (!q) {
     return (
       <section className={styles.root}>
         <EmptyState variant='initial' />
@@ -48,46 +41,28 @@ export default function SearchResults() {
     );
   }
 
-  if (status === 'loading') {
+  const result = await loadResults(q, page);
+
+  if (!result.ok) {
     return (
       <section className={styles.root}>
-        <div className={styles.skeleton} role='status' aria-busy='true' aria-label='読み込み中'>
-          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-            <div key={i} className={styles.skeletonItem} />
-          ))}
-        </div>
+        <EmptyState variant='error' message={errorKindMessages[result.kind]} />
       </section>
     );
   }
 
-  if (status === 'error' && error) {
+  if (result.data.items.length === 0) {
     return (
       <section className={styles.root}>
-        <EmptyState variant='error' message={errorKindMessages[error.kind]} />
+        <EmptyState variant='no-results' />
       </section>
     );
   }
 
-  if (status === 'success' && data) {
-    if (data.items.length === 0) {
-      return (
-        <section className={styles.root}>
-          <EmptyState variant='no-results' />
-        </section>
-      );
-    }
-
-    const handlePageChange = (next: number) => {
-      router.push(`/?q=${encodeURIComponent(q)}&page=${next}`);
-    };
-
-    return (
-      <section className={styles.root}>
-        <RepositoryList items={data.items} />
-        <PaginationBar total={data.total_count} page={page} pageSize={PER_PAGE} onChange={handlePageChange} />
-      </section>
-    );
-  }
-
-  return null;
+  return (
+    <section className={styles.root}>
+      <RepositoryList items={result.data.items} />
+      <PaginationBar total={result.data.total_count} page={page} pageSize={PER_PAGE} q={q} />
+    </section>
+  );
 }

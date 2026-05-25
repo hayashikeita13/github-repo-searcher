@@ -1,13 +1,16 @@
+import type { ReactNode } from 'react';
+
 import SearchForm from '@/frontend/components/molecules/SearchForm';
-import SearchResults from '@/frontend/components/organisms/SearchResults';
 
 import styles from './index.module.scss';
 
-export default function HomeTemplate() {
+type Props = { children: ReactNode };
+
+export default function HomeTemplate({ children }: Props) {
   return (
     <div className={styles.root}>
       <SearchForm />
-      <SearchResults />
+      {children}
     </div>
   );
 }
