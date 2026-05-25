@@ -14,15 +14,5 @@ $bp-desktop: 1024px;
   }
 }
 
-// Colors — globals.scss の :root に定義された CSS 変数を参照
-$color-text: var(--color-text);
-$color-text-muted: var(--color-text-muted);
-$color-text-error: var(--color-text-error);
-$color-border: var(--color-border);
-$color-bg: var(--color-bg);
-$color-bg-hover: var(--color-bg-hover);
-$color-bg-skeleton: var(--color-bg-skeleton);
-$color-bg-skeleton-shimmer: var(--color-bg-skeleton-shimmer);
-
 // Radii
 $radius-card: 8px;

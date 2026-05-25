@@ -3,7 +3,7 @@
 .root {
   padding: 2rem;
   text-align: center;
-  color: base.$color-text;
+  color: var(--color-text);
 }
 
 .title {
@@ -13,11 +13,11 @@
 }
 
 .message {
-  color: base.$color-text-muted;
+  color: var(--color-text-muted);
   margin-bottom: 1rem;
 }
 
 .link {
-  color: base.$color-text;
+  color: var(--color-text);
   text-decoration: underline;
 }

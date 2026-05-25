@@ -1,9 +1,9 @@
-import type { GithubRepository } from '@/frontend/api/github/types';
+import type { GithubRepositorySummary } from '@/frontend/api/github/types';
 import RepositoryCard from '@/frontend/components/molecules/RepositoryCard';
 
 import styles from './index.module.scss';
 
-type Props = { items: GithubRepository[] };
+type Props = { items: GithubRepositorySummary[] };
 
 export default function RepositoryList({ items }: Props) {
   return (

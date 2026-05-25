@@ -6,17 +6,9 @@ import { useState } from 'react';
 
 import styles from './index.module.scss';
 
-export default function SearchForm() {
+function InnerForm({ initialQ }: { initialQ: string }) {
   const router = useRouter();
-  const params = useSearchParams();
-  const initialQ = params.get('q') ?? '';
-
   const [value, setValue] = useState(initialQ);
-  const [prevInitialQ, setPrevInitialQ] = useState(initialQ);
-  if (initialQ !== prevInitialQ) {
-    setPrevInitialQ(initialQ);
-    setValue(initialQ);
-  }
 
   const handleSearch = (next: string) => {
     const q = next.trim();
@@ -26,21 +18,30 @@ export default function SearchForm() {
   };
 
   return (
+    <Input.Search
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder='リポジトリを検索'
+      enterButton={
+        <Button type='primary' autoInsertSpace={false}>
+          検索
+        </Button>
+      }
+      size='large'
+      aria-label='リポジトリを検索'
+      allowClear
+      onSearch={handleSearch}
+    />
+  );
+}
+
+export default function SearchForm() {
+  const params = useSearchParams();
+  const initialQ = params.get('q') ?? '';
+
+  return (
     <div className={styles.root}>
-      <Input.Search
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder='リポジトリを検索'
-        enterButton={
-          <Button type='primary' autoInsertSpace={false}>
-            検索
-          </Button>
-        }
-        size='large'
-        aria-label='リポジトリを検索'
-        allowClear
-        onSearch={handleSearch}
-      />
+      <InnerForm key={initialQ} initialQ={initialQ} />
     </div>
   );
 }

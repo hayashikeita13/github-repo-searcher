@@ -171,13 +171,13 @@ describe('searchRepositories', () => {
     expect(init.cache).toBeUndefined();
   });
 
-  it('opts.next を渡さないとき cache: "no-store" が指定される', async () => {
+  it('opts.next を渡さないとき cache も next も明示しない（Next.js 既定挙動に委ねる）', async () => {
     const fetchMock = vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(validResponse));
 
     await searchRepositories({ q: 'react', page: 1, perPage: 50 });
 
     const init = fetchMock.mock.calls[0][1] as RequestInit & { next?: unknown };
-    expect(init.cache).toBe('no-store');
+    expect(init.cache).toBeUndefined();
     expect(init.next).toBeUndefined();
   });
 });

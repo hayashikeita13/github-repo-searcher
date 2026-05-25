@@ -43,7 +43,7 @@ export async function githubFetch<T>(url: string, schema: ZodType<T>, opts: Gith
     res = await fetch(url, {
       headers: COMMON_HEADERS,
       signal: opts.signal,
-      ...(opts.next ? { next: opts.next } : { cache: 'no-store' }),
+      next: opts.next,
     });
   } catch (err) {
     if (isAbortError(err)) throw err;

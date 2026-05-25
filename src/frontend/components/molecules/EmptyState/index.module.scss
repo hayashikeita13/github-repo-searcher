@@ -3,9 +3,9 @@
 .root {
   padding: 2rem 1rem;
   text-align: center;
-  color: base.$color-text-muted;
+  color: var(--color-text-muted);
 }
 
 .error {
-  color: base.$color-text-error;
+  color: var(--color-text-error);
 }
