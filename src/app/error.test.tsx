@@ -10,7 +10,7 @@ describe('app/error', () => {
 
   it('error.message を表示する', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    render(<Error error={new globalThis.Error('boom')} unstable_retry={vi.fn()} />);
+    render(<Error error={new globalThis.Error('boom')} reset={vi.fn()} />);
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByText('boom')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '予期せぬエラーが発生しました' })).toBeInTheDocument();
@@ -19,15 +19,15 @@ describe('app/error', () => {
   it('マウント時に console.error にエラーを渡す', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const err = new globalThis.Error('boom');
-    render(<Error error={err} unstable_retry={vi.fn()} />);
+    render(<Error error={err} reset={vi.fn()} />);
     expect(spy).toHaveBeenCalledWith(err);
   });
 
-  it('「もう一度試す」ボタンで unstable_retry が呼ばれる', () => {
+  it('「もう一度試す」ボタンで reset が呼ばれる', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    const retry = vi.fn();
-    render(<Error error={new globalThis.Error('boom')} unstable_retry={retry} />);
+    const reset = vi.fn();
+    render(<Error error={new globalThis.Error('boom')} reset={reset} />);
     fireEvent.click(screen.getByRole('button', { name: 'もう一度試す' }));
-    expect(retry).toHaveBeenCalledTimes(1);
+    expect(reset).toHaveBeenCalledTimes(1);
   });
 });

@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 
 type Props = {
   error: Error & { digest?: string };
-  unstable_retry: () => void;
+  reset: () => void;
 };
 
-export default function Error({ error, unstable_retry }: Props) {
+export default function Error({ error, reset }: Props) {
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -16,7 +16,7 @@ export default function Error({ error, unstable_retry }: Props) {
     <div role='alert' style={{ padding: '2rem', textAlign: 'center' }}>
       <h2>予期せぬエラーが発生しました</h2>
       <p style={{ color: '#6b7280' }}>{error.message}</p>
-      <button type='button' onClick={() => unstable_retry()}>
+      <button type='button' onClick={() => reset()}>
         もう一度試す
       </button>
     </div>
