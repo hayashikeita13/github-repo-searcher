@@ -110,7 +110,7 @@ PR 起点で `.github/workflows/ci.yml` が以下を実行します（Node 22）
 push 前にローカルでこの 3 つが通ることを確認してください。Husky の pre-commit フックでも同等のチェックが走ります。
 
 ## サービスイメージ
-https://github.com/user-attachments/assets/ab3dd4e4-8302-4cb4-8321-be70b4f3869f
-https://github.com/user-attachments/assets/66546ee1-535f-4424-ae8b-7aebabe0067a
-https://github.com/user-attachments/assets/561aabef-0db4-45cc-b6d0-d2249a9adfdf
-https://github.com/user-attachments/assets/b6674e5e-2e02-413d-8e8a-4187e014cc53
+![desktop - home](https://github.com/user-attachments/assets/ab3dd4e4-8302-4cb4-8321-be70b4f3869f)
+![desktop - detail](https://github.com/user-attachments/assets/66546ee1-535f-4424-ae8b-7aebabe0067a)
+![mobile - home](https://github.com/user-attachments/assets/561aabef-0db4-45cc-b6d0-d2249a9adfdf)
+![mobile - detail](https://github.com/user-attachments/assets/b6674e5e-2e02-413d-8e8a-4187e014cc53)

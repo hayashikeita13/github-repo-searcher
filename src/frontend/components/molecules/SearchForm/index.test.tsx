@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import SearchForm from './index';
@@ -39,19 +40,21 @@ describe('SearchForm', () => {
     expect(screen.getByRole('searchbox')).toHaveValue('foo');
   });
 
-  it('検索ボタンクリックで router.push が /?q=<encoded>&page=1 を呼ぶ', () => {
+  it('検索ボタンクリックで router.push が /?q=<encoded>&page=1 を呼ぶ', async () => {
+    const user = userEvent.setup();
     render(<SearchForm />);
     const input = screen.getByRole('searchbox');
-    fireEvent.change(input, { target: { value: 'react hooks' } });
-    fireEvent.click(screen.getByRole('button', { name: '検索' }));
+    await user.type(input, 'react hooks');
+    await user.click(screen.getByRole('button', { name: '検索' }));
     expect(pushMock).toHaveBeenCalledWith('/?q=react+hooks&page=1');
   });
 
-  it('空白のみのとき router.push は呼ばれない', () => {
+  it('空白のみのとき router.push は呼ばれない', async () => {
+    const user = userEvent.setup();
     render(<SearchForm />);
     const input = screen.getByRole('searchbox');
-    fireEvent.change(input, { target: { value: '   ' } });
-    fireEvent.click(screen.getByRole('button', { name: '検索' }));
+    await user.type(input, '   ');
+    await user.click(screen.getByRole('button', { name: '検索' }));
     expect(pushMock).not.toHaveBeenCalled();
   });
 

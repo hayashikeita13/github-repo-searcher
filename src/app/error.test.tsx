@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import Error from './error';
@@ -23,11 +24,12 @@ describe('app/error', () => {
     expect(spy).toHaveBeenCalledWith(err);
   });
 
-  it('「もう一度試す」ボタンで reset が呼ばれる', () => {
+  it('「もう一度試す」ボタンで reset が呼ばれる', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    const user = userEvent.setup();
     const reset = vi.fn();
     render(<Error error={new globalThis.Error('boom')} reset={reset} />);
-    fireEvent.click(screen.getByRole('button', { name: 'もう一度試す' }));
+    await user.click(screen.getByRole('button', { name: 'もう一度試す' }));
     expect(reset).toHaveBeenCalledTimes(1);
   });
 });
