@@ -73,6 +73,7 @@ src/
 │   ├── page.tsx                   # トップ（検索ページ）
 │   ├── error.tsx                  # ルートレベルのエラー境界
 │   ├── loading.tsx                # ルートレベルのローディング
+│   ├── not-found.tsx              # ルートレベルの 404
 │   └── repositories/
 │       └── [owner]/[name]/        # リポジトリ詳細ページ
 │           ├── page.tsx
@@ -80,11 +81,18 @@ src/
 │           └── not-found.tsx
 └── frontend/
     ├── api/github/                # GitHub API クライアントと zod スキーマ
+    │   ├── client.ts              # 共通 fetch クライアント（エラー整形 / zod 検証）
+    │   ├── searchRepositories.ts  # リポジトリ検索 API
+    │   ├── getRepository.ts       # リポジトリ詳細 API
+    │   ├── schemas.ts             # zod スキーマ定義
+    │   ├── types.ts               # 型・GithubApiError
+    │   └── constants.ts
     └── components/                # Atomic Design に基づくコンポーネント
         ├── base.module.scss       # 共通定義（カラー・ブレークポイント・mixin）
-        ├── molecules/
-        ├── organisms/
-        └── templates/
+        ├── atoms/                 # （現状未使用・拡張用）
+        ├── molecules/             # SearchForm / RepositoryCard / RepositoryStat / PaginationBar / EmptyState
+        ├── organisms/             # Header / SearchResults / RepositoryList / RepositoryDetail
+        └── templates/             # HomeTemplate / RepositoryDetailTemplate
 ```
 
 パスエイリアスは `@/* → ./src/*` です。
@@ -101,11 +109,11 @@ src/
 
 ## CI
 
-PR 起点で `.github/workflows/ci.yml` が以下を実行します（Node 22）。
+PR 起点で `.github/workflows/ci.yml` が以下を実行します（Node 22 / `npm ci`）。
 
 1. `npm run lint`
 2. `npm run check-types`
-3. `npm test-coverage`
+3. `npm run test-coverage`（カバレッジレポートを PR に投稿）
 
 push 前にローカルでこの 3 つが通ることを確認してください。Husky の pre-commit フックでも同等のチェックが走ります。
 
