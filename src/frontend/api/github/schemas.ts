@@ -5,11 +5,14 @@ export const GithubOwnerSchema = z.object({
   avatar_url: z.url(),
 });
 
-export const GithubRepositorySchema = z.object({
+export const GithubRepositorySummarySchema = z.object({
   id: z.number(),
   name: z.string(),
   full_name: z.string(),
   owner: GithubOwnerSchema,
+});
+
+export const GithubRepositorySchema = GithubRepositorySummarySchema.extend({
   html_url: z.url(),
   description: z.string().nullable().optional(),
   language: z.string().nullable(),
@@ -25,7 +28,7 @@ export const GithubRepositorySchema = z.object({
 export const SearchRepositoriesResponseSchema = z.object({
   total_count: z.number(),
   incomplete_results: z.boolean(),
-  items: z.array(GithubRepositorySchema),
+  items: z.array(GithubRepositorySummarySchema),
 });
 
 export const SearchRepositoriesArgsSchema = z.object({
@@ -41,5 +44,5 @@ export const GetRepositoryArgsSchema = z.object({
 
 export const SearchUrlQuerySchema = z.object({
   q: z.string().trim().min(1).optional(),
-  page: z.coerce.number().int().min(1).default(1),
+  page: z.coerce.number().int().min(1).max(100).catch(1),
 });

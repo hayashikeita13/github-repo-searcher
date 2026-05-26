@@ -37,9 +37,14 @@ describe('app/page', () => {
     expect(screen.getByTestId('search-results')).toHaveTextContent('q=react;page=3');
   });
 
-  it('不正な page でも safeParse 失敗 → デフォルト挙動になる', async () => {
+  it('不正な page は 1 に丸められ、q は保持される', async () => {
     await renderPage({ q: 'react', page: 'abc' });
-    expect(screen.getByTestId('search-results')).toHaveTextContent('q=undefined;page=1');
+    expect(screen.getByTestId('search-results')).toHaveTextContent('q=react;page=1');
+  });
+
+  it('page=200 のような範囲外も 1 に丸められる', async () => {
+    await renderPage({ q: 'react', page: '200' });
+    expect(screen.getByTestId('search-results')).toHaveTextContent('q=react;page=1');
   });
 
   it('HomeTemplate（検索窓）の中にレンダリングされる', async () => {

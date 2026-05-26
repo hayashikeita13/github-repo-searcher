@@ -30,7 +30,7 @@
 .name {
   font-size: 1.25rem;
   font-weight: 600;
-  color: base.$color-text;
+  color: var(--color-text);
   word-break: break-all;
   margin: 0;
   min-width: 0;

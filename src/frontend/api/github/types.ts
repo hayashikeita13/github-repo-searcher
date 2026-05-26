@@ -4,12 +4,14 @@ import type {
   GetRepositoryArgsSchema,
   GithubOwnerSchema,
   GithubRepositorySchema,
+  GithubRepositorySummarySchema,
   SearchRepositoriesArgsSchema,
   SearchRepositoriesResponseSchema,
 } from './schemas';
 
 export type GithubOwner = z.infer<typeof GithubOwnerSchema>;
 export type GithubRepository = z.infer<typeof GithubRepositorySchema>;
+export type GithubRepositorySummary = z.infer<typeof GithubRepositorySummarySchema>;
 export type SearchRepositoriesResponse = z.infer<typeof SearchRepositoriesResponseSchema>;
 export type SearchRepositoriesArgs = z.infer<typeof SearchRepositoriesArgsSchema>;
 export type GetRepositoryArgs = z.infer<typeof GetRepositoryArgsSchema>;

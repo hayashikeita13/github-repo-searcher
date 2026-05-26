@@ -7,9 +7,9 @@
   align-items: flex-start;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
-  border: 1px solid base.$color-border;
+  border: 1px solid var(--color-border);
   border-radius: base.$radius-card;
-  background-color: base.$color-bg;
+  background-color: var(--color-bg);
   min-width: 6.5rem;
 
   @include base.tablet {
@@ -20,7 +20,7 @@
 .label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: base.$color-text-muted;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -28,6 +28,6 @@
 .value {
   font-size: 1.25rem;
   font-weight: 600;
-  color: base.$color-text;
+  color: var(--color-text);
   margin: 0;
 }
